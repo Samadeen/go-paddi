@@ -2,6 +2,7 @@
 
 import { WarehouseIcon } from '@phosphor-icons/react';
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import { usePersistedHotels } from '@/src/hooks/use-persisted-hotels';
 import EmptyState from '@/src/modules/dashboard/_components/empty-state';
@@ -27,6 +28,8 @@ type ActiveModal = {
   hotelId: string;
   view: HotelInfoModalView;
 };
+
+const getHotelLabel = (hotel: HotelData) => hotel.name;
 
 const Hotel = ({
   hotels: initialHotels,
@@ -58,11 +61,20 @@ const Hotel = ({
 
   const handleAddHotel = (hotel: HotelData) => {
     setHotels((current) => [...current, hotel]);
+    toast.success('Hotel added', {
+      description: `${getHotelLabel(hotel)} has been added to your trip.`,
+    });
   };
 
   const handleRemoveHotel = (id: string) => {
-    setHotels((current) => current.filter((hotel) => hotel.id !== id));
+    const hotel = hotels.find((item) => item.id === id);
+    setHotels((current) => current.filter((item) => item.id !== id));
     onRemoveHotel?.(id);
+    toast.success('Hotel removed', {
+      description: hotel
+        ? `${getHotelLabel(hotel)} has been removed from your trip.`
+        : 'The hotel has been removed from your trip.',
+    });
   };
 
   const openInfoModal = (hotelId: string, view: HotelInfoModalView) => {
@@ -102,6 +114,9 @@ const Hotel = ({
         hotel.id === updatedHotel.id ? updatedHotel : hotel,
       ),
     );
+    toast.success('Hotel updated', {
+      description: `${getHotelLabel(updatedHotel)} has been saved.`,
+    });
   };
 
   const openModal = () => setModalOpen(true);

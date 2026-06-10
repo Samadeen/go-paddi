@@ -2,6 +2,7 @@
 
 import { AirplaneInFlightIcon } from '@phosphor-icons/react';
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import { usePersistedFlights } from '@/src/hooks/use-persisted-flights';
 import EmptyState from '@/src/modules/dashboard/_components/empty-state';
@@ -26,6 +27,9 @@ type ActiveModal = {
   flightId: string;
   view: FlightInfoModalView;
 };
+
+const getFlightLabel = (flight: FlightData) =>
+  `${flight.originCode} → ${flight.destinationCode}`;
 
 const Flights = ({
   flights: initialFlights,
@@ -56,11 +60,20 @@ const Flights = ({
 
   const handleAddFlight = (flight: FlightData) => {
     setFlights((current) => [...current, flight]);
+    toast.success('Flight added', {
+      description: `${getFlightLabel(flight)} has been added to your trip.`,
+    });
   };
 
   const handleRemoveFlight = (id: string) => {
-    setFlights((current) => current.filter((flight) => flight.id !== id));
+    const flight = flights.find((item) => item.id === id);
+    setFlights((current) => current.filter((item) => item.id !== id));
     onRemoveFlight?.(id);
+    toast.success('Flight removed', {
+      description: flight
+        ? `${getFlightLabel(flight)} has been removed from your trip.`
+        : 'The flight has been removed from your trip.',
+    });
   };
 
   const openInfoModal = (flightId: string, view: FlightInfoModalView) => {
@@ -88,6 +101,9 @@ const Flights = ({
         flight.id === updatedFlight.id ? updatedFlight : flight,
       ),
     );
+    toast.success('Flight updated', {
+      description: `${getFlightLabel(updatedFlight)} has been saved.`,
+    });
   };
 
   const openModal = () => setModalOpen(true);

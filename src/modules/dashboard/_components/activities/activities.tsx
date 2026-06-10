@@ -2,6 +2,7 @@
 
 import { RoadHorizonIcon } from '@phosphor-icons/react';
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import { usePersistedActivities } from '@/src/hooks/use-persisted-activities';
 import ActivityCard from '@/src/modules/dashboard/_components/activities/activity-card';
@@ -30,6 +31,8 @@ type ActiveModal = {
   activityId: string;
   view: ActivityInfoModalView;
 };
+
+const getActivityLabel = (activity: ActivityData) => activity.name;
 
 const Activities = ({
   activities: initialActivities,
@@ -67,11 +70,20 @@ const Activities = ({
 
   const handleAddActivity = (activity: ActivityData) => {
     setActivities((current) => [...current, activity]);
+    toast.success('Activity added', {
+      description: `${getActivityLabel(activity)} has been added to your trip.`,
+    });
   };
 
   const handleRemoveActivity = (id: string) => {
-    setActivities((current) => current.filter((activity) => activity.id !== id));
+    const activity = activities.find((item) => item.id === id);
+    setActivities((current) => current.filter((item) => item.id !== id));
     onRemoveActivity?.(id);
+    toast.success('Activity removed', {
+      description: activity
+        ? `${getActivityLabel(activity)} has been removed from your trip.`
+        : 'The activity has been removed from your trip.',
+    });
   };
 
   const openInfoModal = (activityId: string, view: ActivityInfoModalView) => {
@@ -140,6 +152,9 @@ const Activities = ({
         activity.id === updatedActivity.id ? updatedActivity : activity,
       ),
     );
+    toast.success('Activity updated', {
+      description: `${getActivityLabel(updatedActivity)} has been saved.`,
+    });
   };
 
   const openModal = () => setModalOpen(true);
