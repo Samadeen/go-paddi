@@ -19,33 +19,26 @@ import {
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { useDebouncedValue } from '@/src/hooks/use-debounced-value';
-import type { FlightLocation } from '@/src/hooks/use-flight/flight.types';
-import { useFlightLocationQuery } from '@/src/hooks/use-flight/use-flight';
+import type { HotelDestination } from '@/src/hooks/use-hotel/hotel.types';
+import { useHotelDestinationQuery } from '@/src/hooks/use-hotel/use-hotel';
 
-type FlightLocationPickerProps = {
+type HotelDestinationPickerProps = {
   label: string;
-  value: FlightLocation | null;
-  onChange: (location: FlightLocation | null) => void;
+  value: HotelDestination | null;
+  onChange: (destination: HotelDestination | null) => void;
   placeholder?: string;
 };
 
-function formatLocationLabel(location: FlightLocation) {
-  const city = location.cityName ?? location.city ?? location.name;
-  const code = location.code ? ` (${location.code})` : '';
-
-  return `${city}${code}, ${location.countryName}`;
-}
-
-const FlightLocationPicker = ({
+const HotelDestinationPicker = ({
   label,
   value,
   onChange,
-  placeholder = 'Search airport or city',
-}: FlightLocationPickerProps) => {
+  placeholder = 'Search city, district, or airport',
+}: HotelDestinationPickerProps) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebouncedValue(search, 400);
-  const { data, isFetching } = useFlightLocationQuery(debouncedSearch, {
+  const { data, isFetching } = useHotelDestinationQuery(debouncedSearch, {
     enabled: open,
   });
   const isDebouncing =
@@ -57,7 +50,7 @@ const FlightLocationPicker = ({
     }
   }, [open]);
 
-  const locations: FlightLocation[] = data?.data ?? [];
+  const destinations = data?.data ?? [];
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -78,7 +71,7 @@ const FlightLocationPicker = ({
             )}
           >
             <span className="truncate">
-              {value ? formatLocationLabel(value) : placeholder}
+              {value ? value.label : placeholder}
             </span>
             <CaretUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
           </Button>
@@ -97,25 +90,27 @@ const FlightLocationPicker = ({
                   ? 'Searching...'
                   : search.length < 2
                     ? 'Type at least 2 characters'
-                    : 'No locations found'}
+                    : 'No destinations found'}
               </CommandEmpty>
               <CommandGroup>
-                {locations.map((location) => (
+                {destinations.map((destination) => (
                   <CommandItem
-                    key={location.id}
-                    value={location.id}
+                    key={`${destination.dest_id}-${destination.search_type}`}
+                    value={destination.dest_id}
                     onSelect={() => {
-                      onChange(location);
+                      onChange(destination);
                       setOpen(false);
                     }}
                   >
                     <div className="flex flex-col">
                       <span className="text-sm font-medium text-text-primary">
-                        {location.name}
-                        {location.code ? ` (${location.code})` : ''}
+                        {destination.name}
+                        <span className="ml-1 text-xs font-normal text-text-muted">
+                          ({destination.dest_type})
+                        </span>
                       </span>
                       <span className="text-xs text-text-muted">
-                        {location.countryName}
+                        {destination.label}
                       </span>
                     </div>
                   </CommandItem>
@@ -129,4 +124,4 @@ const FlightLocationPicker = ({
   );
 };
 
-export default FlightLocationPicker;
+export default HotelDestinationPicker;

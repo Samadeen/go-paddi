@@ -15,8 +15,10 @@ export type TripInfoData = {
 
 export type CtaCardVariant = 'dark' | 'light' | 'primary';
 
+export type CtaModalId = 'flights' | 'hotels' | 'activities';
+
 export type CtaItem = {
-  id: string;
+  id: CtaModalId;
   title: string;
   description: string;
   buttonLabel: string;

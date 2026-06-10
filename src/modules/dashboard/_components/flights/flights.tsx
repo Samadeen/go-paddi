@@ -14,6 +14,8 @@ import type { FlightData } from '@/src/modules/dashboard/types';
 
 type FlightsProps = {
   flights?: FlightData[];
+  addModalOpen?: boolean;
+  onAddModalOpenChange?: (open: boolean) => void;
   onRemoveFlight?: (id: string) => void;
   onFlightDetails?: (id: string) => void;
   onPriceDetails?: (id: string) => void;
@@ -27,13 +29,22 @@ type ActiveModal = {
 
 const Flights = ({
   flights: initialFlights,
+  addModalOpen,
+  onAddModalOpenChange,
   onRemoveFlight,
   onFlightDetails,
   onPriceDetails,
   onEditDetails,
 }: FlightsProps) => {
   const { flights, setFlights, hydrated } = usePersistedFlights(initialFlights);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [internalModalOpen, setInternalModalOpen] = useState(false);
+  const isModalOpen = onAddModalOpenChange
+    ? (addModalOpen ?? false)
+    : internalModalOpen;
+  const setModalOpen = (open: boolean) => {
+    if (onAddModalOpenChange) onAddModalOpenChange(open);
+    else setInternalModalOpen(open);
+  };
   const [activeModal, setActiveModal] = useState<ActiveModal | null>(null);
 
   const isEmpty = flights.length === 0;
@@ -79,7 +90,7 @@ const Flights = ({
     );
   };
 
-  const openModal = () => setIsModalOpen(true);
+  const openModal = () => setModalOpen(true);
 
   if (!hydrated) {
     return (
@@ -140,7 +151,7 @@ const Flights = ({
 
       <AddFlightModal
         open={isModalOpen}
-        onOpenChange={setIsModalOpen}
+        onOpenChange={setModalOpen}
         onAddFlight={handleAddFlight}
       />
 

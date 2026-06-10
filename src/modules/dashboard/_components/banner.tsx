@@ -13,7 +13,7 @@ import sun from '@/public/assets/sun.svg';
 const Banner = () => {
   return (
     <motion.div
-      className="relative h-[12.5rem] w-full overflow-hidden rounded bg-[#cfe9ff]"
+      className="relative h-50 w-full overflow-hidden rounded bg-[#cfe9ff]"
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: 'easeOut' }}

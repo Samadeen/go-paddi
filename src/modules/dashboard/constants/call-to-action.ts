@@ -1,4 +1,4 @@
-import type { CtaItem } from '@/src/modules/dashboard/types';
+import type { CtaItem, TripInfoData } from '@/src/modules/dashboard/types';
 
 export const defaultCtaItems: CtaItem[] = [
   {
@@ -8,7 +8,6 @@ export const defaultCtaItems: CtaItem[] = [
       'Build, personalize, and optimize your itineraries with our trip planner.',
     buttonLabel: 'Add Activities',
     variant: 'dark',
-    href: '/activities',
   },
   {
     id: 'hotels',
@@ -17,7 +16,6 @@ export const defaultCtaItems: CtaItem[] = [
       'Build, personalize, and optimize your itineraries with our trip planner.',
     buttonLabel: 'Add Hotels',
     variant: 'light',
-    href: '/hotels',
   },
   {
     id: 'flights',
@@ -26,7 +24,6 @@ export const defaultCtaItems: CtaItem[] = [
       'Build, personalize, and optimize your itineraries with our trip planner.',
     buttonLabel: 'Add Flights',
     variant: 'primary',
-    href: '/flights',
   },
 ];
 
@@ -50,3 +47,12 @@ export const ctaCardStyles = {
     button: 'bg-white text-primary-600',
   },
 } as const;
+
+export const defaultTrip: TripInfoData = {
+  title: 'Bahamas Family Trip',
+  startDate: '2024-03-21',
+  endDate: '2024-04-21',
+  location: 'New York, United States of America',
+  tripType: 'Solo Trip',
+  participants: [{ id: '1', name: 'Trip member' }],
+};
