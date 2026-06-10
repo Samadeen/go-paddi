@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { cn } from '@/lib/utils';
 import type { SidebarRoute } from '@/src/modules/type';
 import sidebarRoutes from '@/src/routes/sidebar.route';
 
@@ -22,21 +23,30 @@ function SidebarNavItem({
   return (
     <Link
       href={route.href}
-      className={`flex w-full items-center gap-2 rounded px-[14px] py-3 ${
-        isActive ? 'bg-neutral-300' : 'bg-white'
-      }`}
+      className={cn(
+        'group flex w-full cursor-pointer items-center gap-2 rounded px-[14px] py-3 transition-colors',
+        isActive
+          ? 'bg-neutral-300'
+          : 'bg-white hover:bg-neutral-200/70',
+      )}
     >
       <Icon
         size={32}
         weight="regular"
-        className={isActive ? 'text-text-primary' : 'text-text-secondary'}
+        className={cn(
+          'transition-colors',
+          isActive
+            ? 'text-text-primary'
+            : 'text-text-secondary group-hover:text-primary-600',
+        )}
       />
       <span
-        className={`text-base leading-6 tracking-[-0.01em] ${
+        className={cn(
+          'text-base font-medium leading-6 tracking-[-0.01em] transition-colors',
           isActive
-            ? 'font-medium text-text-primary'
-            : 'font-medium text-text-secondary'
-        }`}
+            ? 'text-text-primary'
+            : 'text-text-secondary group-hover:text-primary-600',
+        )}
       >
         {route.label}
       </span>

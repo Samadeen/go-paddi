@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { cn } from '@/lib/utils';
 import type { HeaderRoute } from '@/src/modules/type';
 import { headerActionRoutes, headerRoutes } from '@/src/routes/header.route';
 import logo from '@/public/assets/logo.svg';
@@ -27,18 +28,27 @@ function HeaderNavItem({
   const Icon = route.icon;
 
   return (
-    <Link href={route.href} className="flex w-max flex-col items-center gap-2">
+    <Link
+      href={route.href}
+      className="group flex w-max cursor-pointer flex-col items-center gap-2 rounded-lg px-2 py-1 transition-colors hover:bg-neutral-200/60"
+    >
       <Icon
         size={32}
         weight="regular"
-        className={isActive ? 'text-text-primary' : 'text-text-secondary'}
+        className={cn(
+          'transition-colors',
+          isActive
+            ? 'text-text-primary'
+            : 'text-text-secondary group-hover:text-primary-600',
+        )}
       />
       <span
-        className={`text-base leading-6 tracking-[-0.01em] ${
+        className={cn(
+          'text-base font-medium leading-6 tracking-[-0.01em] transition-colors',
           isActive
-            ? 'font-medium text-text-primary'
-            : 'font-medium text-text-secondary'
-        }`}
+            ? 'text-text-primary'
+            : 'text-text-secondary group-hover:text-primary-600',
+        )}
       >
         {route.label}
       </span>
@@ -53,7 +63,10 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full shrink-0 bg-white">
       <div className="flex items-start justify-between gap-6 px-10 py-4 ">
         <div className="flex shrink-0 items-start gap-7 scale-[0.8] translate-x-[-50px]">
-          <Link href="/" className="shrink-0">
+          <Link
+            href="/"
+            className="shrink-0 rounded-lg transition-opacity hover:opacity-80"
+          >
             <Image src={logo} alt="Go Paddi" width={59} height={56} priority />
           </Link>
 
@@ -87,7 +100,7 @@ const Header = () => {
 
           <button
             type="button"
-            className="h-10 shrink-0 self-center rounded bg-primary-600 px-4 py-2 text-sm font-medium leading-[22px] tracking-[-0.01em] text-white"
+            className="h-10 shrink-0 cursor-pointer self-center rounded bg-primary-600 px-4 py-2 text-sm font-medium leading-[22px] tracking-[-0.01em] text-white transition-colors hover:bg-primary-600/90"
           >
             Subscribe
           </button>
@@ -104,7 +117,7 @@ const Header = () => {
 
           <button
             type="button"
-            className="flex shrink-0 items-center gap-[15px] self-center"
+            className="flex shrink-0 cursor-pointer items-center gap-[15px] self-center rounded-lg p-1 transition-colors hover:bg-neutral-200/60"
             aria-label="Open profile menu"
           >
             <Image
